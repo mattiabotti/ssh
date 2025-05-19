@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema di Gestione Studenti e Aziende</title>
+    <style>
+     
+               body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        /* Header principale */
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .user-area {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Stile per il menu hamburger */
+        .hamburger {
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 24px;
+        }
+        
+        .hamburger-line {
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 2px;
+        }
+        
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 34px;
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            z-index: 100;
+        }
+        
+        .dropdown.active {
+            display: block;
+        }
+        
+        .dropdown a, .dropdown button {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            text-align: left;
+            width: 100%;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown a:hover, .dropdown button:hover {
+            background-color: #555;
+        }
+        
+        .dropdown .btn-logout {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown .btn-logout:hover {
+            background-color: #c82333;
+        }
+        
+        /* Barra di navigazione */
+        nav {
+            background: #444;
+            color: #fff;
+            padding: 0.5rem;
+        }
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+        }
+        
+        nav ul li {
+            margin: 0 10px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        
+        /* Sezioni di gestione dati */
+        .data-management-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Tabelle dati */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background-color: #555;
+            color: white;
+            padding: 12px;
+        }
+        
+        .data-table td {
+            background-color: white;
+        }
+        
+        /* Pulsanti */
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            min-width: 150px;
+            border-radius: 3px;
+        }
+        
+        .btn.primary { background: #007bff; }
+        .btn.success { background: #27ae60; }
+        .btn.danger { background: #e74c3c; }
+        .btn.small { padding: 5px 10px; }
+        .btn-lightgreen { background-color: #2ecc71; }
+        .btn-yellow { background-color: #f1c40f; }
+        
+        /* Modal form */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        /* Form gruppi */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        /* Pulsanti di azione */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        /* Ricerca */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .form-group input[type="checkbox"] {
+            cursor: pointer;
+            margin: 0;
+            height: 16px;
+            width: 16px;
+        }
+        /* Stile per rendere il nome dell'azienda cliccabile */
+.azienda-nome-link {
+    color: #0056b3;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.azienda-nome-link:hover {
+    text-decoration: underline;
+}
+
+/* Stile per il modal dei dettagli */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.azienda-details-content {
+    margin-top: 20px;
+}
+
+.detail-row {
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.detail-label {
+    font-weight: bold;
+    width: 150px;
+    flex-shrink: 0;
+}
+
+#details-note {
+    white-space: pre-wrap;
+    margin-top: 5px;
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+#form-add-azienda {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.form-group {
+    flex: 1 0 45%;
+    min-width: 250px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+            </style>
+        </head>
+        <body>
+            <header>
+                <div class="user-area">
+                    <div class="hamburger" onclick="toggleDropdown()">
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </div>
+                    
+                    <div class="dropdown" id="dropdown-menu">
+                        <a href="/" title="Torna alla home">Home</a>
+                        <a href="/sito_mail" title="go to mail">Mail</a>
+                        <a href="/export-associazioni" title="Esporta associazioni">File inail</a>
+                        <a href="/convenzioni" title="genera convenzioni">Convenzioni</a>
+                        <button onclick="window.location.href='/logout'" class="btn-logout">Logout</button>
+                    </div>
+                </div>
+                <h1>Sistema di Gestione Studenti e Aziende</h1>
+            </header>
+        
+            <script>
+                function toggleDropdown() {
+                    const dropdown = document.getElementById('dropdown-menu');
+                    dropdown.classList.toggle('active');
+                }
+                
+                // Chiude il dropdown se si clicca altrove nella pagina
+                window.addEventListener('click', function(e) {
+                    const dropdown = document.getElementById('dropdown-menu');
+                    const hamburger = document.querySelector('.hamburger');
+                    
+                    if (!hamburger.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+            </script>
+
+    <nav>
+        <ul>
+            <li><a href="#" id="nav-aziende">Aziende</a></li>
+            <li><a href="#" id="nav-studenti">Studenti</a></li>
+            <li><a href="#" id="nav-associazioni">Associazioni</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sezione Aziende -->
+        <section id="section-aziende" class="data-management-section">
+            <div class="action-buttons">
+                <h2>Gestione Aziende</h2>
+                <button id="btn-add-azienda" class="btn success">Aggiungi Nuova Azienda</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-aziende" placeholder="Cerca azienda..." class="search-input">
+                <button id="btn-search-aziende" class="btn primary">Cerca</button>
+                <button id="btn-reset-aziende" class="btn">Reset</button>
+            </div>
+            <div id="form-add-azienda" class="modal">
+                <div class="modal-content">
+                    <h3>Aggiungi/Modifica Azienda</h3>
+                    <form id="azienda-form">
+                        <input type="hidden" id="azienda-id">
+                        <div class="form-group">
+                            <label for="azienda-nome">Nome Azienda*</label>
+                            <input type="text" id="azienda-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="azienda-via">Indirizzo</label>
+                            <input type="text" id="azienda-via">
+                        </div>
+                        <div class="form-group">
+                            <label for="azienda-cap">CAP</label>
+                            <input type="text" id="azienda-cap">
+                        </div>
+                        <div class="form-group">
+                            <label for="azienda-comune">Comune</label>
+                            <input type="text" id="azienda-comune">
+                        </div>
+                        <div class="form-group">
+                            <label for="azienda-referente">Referente</label>
+                            <input type="text" id="azienda-referente">
+                        </div>
+                        <div class="form-group">
+                            <label for="azienda-email">Email Referente</label>
+                            <input type="email" id="azienda-email">
+                        </div>
+                        <div class="form-group">
+                            <label for="azienda-cellulare">Cellulare Referente</label>
+                            <input type="tel" id="azienda-cellulare">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="azienda-disponibilita">
+                                Disponibile per Stage Estivi
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="azienda-stage">
+                                Disponibile per Stage PCTO
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="azienda-note">Osservazioni</label>
+                            <textarea id="azienda-note" rows="3"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn success">Salva</button>
+                            <button type="button" id="btn-cancel-azienda" class="btn danger">Annulla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        
+            <div id="aziende-list" class="data-table-container">
+                <!-- Lista aziende verrà caricata qui -->
+            </div>
+        </section>
+
+        <!-- Sezione Studenti -->
+        <section id="section-studenti" class="data-management-section" style="display:none;">
+            <div class="action-buttons">
+                <h2>Gestione Studenti</h2>
+                <button id="btn-add-studente" class="btn success">Aggiungi Nuovo Studente</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-studenti" placeholder="Cerca studente..." class="search-input">
+                <button id="btn-search-studenti" class="btn primary">Cerca</button>
+                <button id="btn-reset-studenti" class="btn">Reset</button>
+            </div>
+            <div id="form-add-studente" class="modal">
+                <div class="modal-content">
+                    <h3>Aggiungi/Modifica Studente</h3>
+                    <form id="studente-form">
+                        <input type="hidden" id="studente-id">
+                        <div class="form-group">
+                            <label for="studente-nome">Nome Studente*</label>
+                            <input type="text" id="studente-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studente-email">Email*</label>
+                            <input type="email" id="studente-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studente-classe">Classe*</label>
+                            <input type="text" id="studente-classe" placeholder="Es: 4A" required>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn success">Salva</button>
+                            <button type="button" id="btn-cancel-studente" class="btn danger">Annulla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="studenti-list" class="data-table-container">
+                <!-- Lista studenti verrà caricata qui -->
+            </div>
+        </section>
+
+        <!-- Sezione Associazioni -->
+        <section id="section-associazioni" class="data-management-section" style="display:none;">
+            <div class="action-buttons">
+                <h2>Gestione Associazioni</h2>
+                <button id="btn-add-associazione" class="btn success">Crea Nuova Associazione</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-associazioni" placeholder="Cerca associazione..." class="search-input">
+                <button id="btn-search-associazioni" class="btn primary">Cerca</button>
+                <button id="btn-reset-associazioni" class="btn">Reset</button>
+            </div>
+            <div id="form-add-associazione" class="modal">
+                <div class="modal-content">
+                    <h3>Crea Nuova Associazione</h3>
+                    <form id="associazione-form">
+                        <input type="hidden" id="associazione-id">
+                        <div class="form-group">
+                            <label for="associazione-studente">Studente*</label>
+                            <select id="associazione-studente" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="associazione-azienda">Azienda*</label>
+                            <select id="associazione-azienda" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="associazione-data-inizio">Data Inizio*</label>
+                            <input type="date" id="associazione-data-inizio" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="associazione-data-fine">Data Fine*</label>
+                            <input type="date" id="associazione-data-fine" required>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn success">Salva</button>
+                            <button type="button" id="btn-cancel-associazione" class="btn danger">Annulla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="associazioni-list" class="data-table-container">
+                <!-- Lista associazioni verrà caricata qui -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Gestione degli errori globale
+        window.addEventListener('error', function(event) {
+            console.error('Errore JavaScript:', event.error);
+            alert('Si è verificato un errore: ' + (event.error ? event.error.message : 'undefined'));
+        });
+
+        // Utility per gestire le richieste AJAX con gestione degli errori
+        async function fetchWithErrorHandling(url, options = {}) {
+            try {
+                const response = await fetch(url, options);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Errore HTTP ${response.status}: ${errorText}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Errore nella richiesta:', error);
+                throw error;
+            }
+        }
+
+        // Gestione Navigazione
+        document.getElementById('nav-aziende').addEventListener('click', () => {
+            document.getElementById('section-aziende').style.display = 'block';
+            document.getElementById('section-studenti').style.display = 'none';
+            document.getElementById('section-associazioni').style.display = 'none';
+            loadAziende();
+        });
+
+        document.getElementById('nav-studenti').addEventListener('click', () => {
+            document.getElementById('section-aziende').style.display = 'none';
+            document.getElementById('section-studenti').style.display = 'block';
+            document.getElementById('section-associazioni').style.display = 'none';
+            loadStudenti();
+        });
+
+        document.getElementById('nav-associazioni').addEventListener('click', () => {
+            document.getElementById('section-aziende').style.display = 'none';
+            document.getElementById('section-studenti').style.display = 'none';
+            document.getElementById('section-associazioni').style.display = 'block';
+            loadAssociazioni();
+        });
+// AZIENDE --------------------------------------------------------
+// Variabili globali per memorizzare i dati originali
+let allAziende = [];
+let allStudenti = [];
+let allAssociazioni = [];
+// Funzione per caricare le aziende
+function loadAziende() {
+    fetchWithErrorHandling('/get-aziende')
+        .then(aziende => {
+            const lista = document.getElementById('aziende-list');
+            if (!Array.isArray(aziende)) {
+                throw new Error('Formato dati non valido');
+            }
+            
+            // Salviamo i dati originali, mappando 'stage' a 'stage_pcto' per compatibilità
+            allAziende = aziende.map(azienda => {
+                // Se stage esiste nel database, mappiamolo a stage_pcto per il frontend
+                if ('stage' in azienda && !('stage_pcto' in azienda)) {
+                    azienda.stage_pcto = azienda.stage;
+                }
+                return azienda;
+            });
+            
+            // Renderizziamo la tabella
+            renderizzaAziende(allAziende);
+        })
+        .catch(error => {
+            console.error('Errore nel caricamento aziende:', error);
+            document.getElementById('aziende-list').innerHTML = 'Errore nel caricamento: ' + error.message;
+        });
+}// Modifica alla funzione showAziendaDetails per controllare sia stage che stage_pcto
+function showAziendaDetails(azienda) {
+    try {
+        // Verifica se il campo stage è disponibile e mappalo a stage_pcto se necessario
+        if ('stage' in azienda && !('stage_pcto' in azienda)) {
+            azienda.stage_pcto = azienda.stage;
+        }
+        
+        // Verifichiamo che tutti gli elementi esistano prima di impostare il loro contenuto
+        const elementsToUpdate = [
+            { id: 'details-azienda-nome', value: 'Dettagli: ' + (azienda.nome || '') },
+            { id: 'details-nome', value: azienda.nome || '-' },
+            { id: 'details-indirizzo', value: azienda.via || '-' },
+            { id: 'details-cap', value: azienda.cap || '-' },
+            { id: 'details-comune', value: azienda.comune || '-' },
+            { id: 'details-referente', value: azienda.nome_referente || '-' },
+            { id: 'details-email', value: azienda.email_referente || '-' },
+            { id: 'details-cellulare', value: azienda.cellulare_referente || '-' },
+            { id: 'details-disponibilita', value: azienda.disponibilita_lavoro_estivo ? 'Sì' : 'No' },
+            { id: 'details-stage-pcto', value: azienda.stage_pcto ? 'Sì' : 'No' },
+            { id: 'details-note', value: azienda.osservazioni || '-' }
+        ];
+
+        // Aggiorniamo ciascun elemento, controllando che esista
+        elementsToUpdate.forEach(element => {
+            const el = document.getElementById(element.id);
+            if (el) {
+                el.textContent = element.value;
+            } else {
+                console.warn(`Elemento con ID '${element.id}' non trovato nel DOM`);
+            }
+        });
+        
+        // Aggiungiamo l'ID dell'azienda al pulsante di modifica
+        const editButton = document.getElementById('details-edit-button');
+        if (editButton) {
+            editButton.setAttribute('data-azienda-id', azienda.id);
+        } else {
+            console.warn("Pulsante di modifica non trovato");
+        }
+        
+        // Mostriamo il modal
+        const modal = document.getElementById('azienda-details-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+        } else {
+            console.warn("Modal dei dettagli non trovato");
+        }
+    } catch (error) {
+        console.error("Errore nella visualizzazione dei dettagli dell'azienda:", error);
+        alert("Si è verificato un errore nella visualizzazione dei dettagli. Controlla la console per maggiori informazioni.");
+    }
+}
+
+// Modifica la funzione renderizzaAziende per assicurarsi che il modal contenga tutti gli elementi necessari
+function renderizzaAziende(aziende) {
+    const lista = document.getElementById('aziende-list');
+    if (!lista) {
+        console.error("Elemento 'aziende-list' non trovato");
+        return;
+    }
+    
+    lista.innerHTML = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Comune</th>
+                    <th>Referente</th>
+                    <th>Email</th>
+                    <th>Stage Estivi</th>
+                    <th>Stage PCTO</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${aziende.length > 0 ? aziende.map(azienda => `
+                    <tr>
+                        <td>
+                            <a href="#" class="azienda-nome-link" data-azienda='${JSON.stringify(azienda).replace(/'/g, "&#39;")}'>
+                                ${azienda.nome || '-'}
+                            </a>
+                        </td>
+                        <td>${azienda.comune || '-'}</td>
+                        <td>${azienda.nome_referente || '-'}</td>
+                        <td>${azienda.email_referente || '-'}</td>
+                        <td>${azienda.disponibilita_lavoro_estivo ? 'Sì' : 'No'}</td>
+                        <td>${azienda.stage_pcto ? 'Sì' : 'No'}</td>
+                        <td>
+                            <button onclick="editAzienda(${JSON.stringify(azienda).replace(/"/g, '&quot;')})" class="btn primary btn-small">Modifica</button>
+                            <button onclick="deleteAzienda(${azienda.id})" class="btn danger btn-small">Elimina</button>
+                        </td>
+                    </tr>
+                `).join('') : '<tr><td colspan="7" style="text-align: center;">Nessuna azienda trovata</td></tr>'}
+            </tbody>
+        </table>
+    `;
+    
+    // Creazione del modal dei dettagli se non esiste già
+    let modalDetails = document.getElementById('azienda-details-modal');
+    if (!modalDetails) {
+        modalDetails = document.createElement('div');
+        modalDetails.id = 'azienda-details-modal';
+        modalDetails.className = 'modal';
+        modalDetails.style.display = 'none';
+        
+        modalDetails.innerHTML = `
+            <div class="modal-content">
+                <span class="close" id="close-azienda-details">&times;</span>
+                <h2 id="details-azienda-nome">Dettagli Azienda</h2>
+                <div class="azienda-details-content">
+                    <div class="detail-row">
+                        <span class="detail-label">Nome:</span>
+                        <span id="details-nome"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Indirizzo:</span>
+                        <span id="details-indirizzo"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">CAP:</span>
+                        <span id="details-cap"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Comune:</span>
+                        <span id="details-comune"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Nome Referente:</span>
+                        <span id="details-referente"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email Referente:</span>
+                        <span id="details-email"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Cellulare Referente:</span>
+                        <span id="details-cellulare"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Disponibilità Stage Estivi:</span>
+                        <span id="details-disponibilita"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Disponibilità Stage PCTO:</span>
+                        <span id="details-stage-pcto"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Note/Osservazioni:</span>
+                        <p id="details-note"></p>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button id="details-edit-button" class="btn primary">Modifica</button>
+                    <button id="details-close-button" class="btn secondary">Chiudi</button>
+                </div>
+            </div>
+        `;
+        
+        // Aggiungiamo il modal al DOM
+        lista.parentNode.appendChild(modalDetails);
+    }
+    
+    // Aggiungiamo gli event listener dopo aver creato gli elementi
+    document.querySelectorAll('.azienda-nome-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const azienda = JSON.parse(this.getAttribute('data-azienda'));
+            showAziendaDetails(azienda);
+        });
+    });
+    
+    // Event listener per chiudere il modal
+    const closeAziendaDetails = document.getElementById('close-azienda-details');
+    if (closeAziendaDetails) {
+        closeAziendaDetails.addEventListener('click', () => {
+            document.getElementById('azienda-details-modal').style.display = 'none';
+        });
+    }
+    
+    const detailsCloseButton = document.getElementById('details-close-button');
+    if (detailsCloseButton) {
+        detailsCloseButton.addEventListener('click', () => {
+            document.getElementById('azienda-details-modal').style.display = 'none';
+        });
+    }
+    
+    const detailsEditButton = document.getElementById('details-edit-button');
+    if (detailsEditButton) {
+        detailsEditButton.addEventListener('click', () => {
+            const aziendaId = detailsEditButton.getAttribute('data-azienda-id');
+            const azienda = aziende.find(a => a.id == aziendaId);
+            if (azienda) {
+                document.getElementById('azienda-details-modal').style.display = 'none';
+                editAzienda(azienda);
+            }
+        });
+    }
+}
+
+// Funzione per impostare il form azienda
+function setupAziendaForm() {
+    const formAddAzienda = document.getElementById('form-add-azienda');
+    if (!formAddAzienda) {
+        console.error("Elemento 'form-add-azienda' non trovato");
+        return;
+    }
+    
+    formAddAzienda.innerHTML = `
+        <div class="modal-content">
+            <h2 id="form-title">Aggiungi/Modifica Azienda</h2>
+            <form id="azienda-form">
+                <input type="hidden" id="azienda-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="azienda-nome">Nome Azienda*</label>
+                        <input type="text" id="azienda-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="azienda-comune">Comune*</label>
+                        <input type="text" id="azienda-comune" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="azienda-via">Via</label>
+                        <input type="text" id="azienda-via">
+                    </div>
+                    <div class="form-group">
+                        <label for="azienda-cap">CAP</label>
+                        <input type="text" id="azienda-cap">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="azienda-referente">Nome Referente*</label>
+                        <input type="text" id="azienda-referente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="azienda-email">Email Referente*</label>
+                        <input type="email" id="azienda-email" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="azienda-cellulare">Cellulare Referente</label>
+                        <input type="text" id="azienda-cellulare" pattern="[0-9]{10}" maxlength="10" placeholder="Inserisci 10 cifre (es. 1111111111)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="azienda-disponibilita" class="checkbox-container">
+                            <span>Disponibilità Stage Estivi</span>
+                            <input type="checkbox" id="azienda-disponibilita">
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="azienda-stage" class="checkbox-container">
+                            <span>Disponibilità Stage PCTO</span>
+                            <input type="checkbox" id="azienda-stage">
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1 0 100%;">
+                        <label for="azienda-note">Note/Osservazioni</label>
+                        <textarea id="azienda-note" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="btn-cancel-azienda" class="btn secondary">Annulla</button>
+                    <button type="submit" class="btn primary">Salva</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    // Reimpostiamo l'event listener per il pulsante Annulla dopo aver ricreato il DOM
+    const btnCancelAzienda = document.getElementById('btn-cancel-azienda');
+    if (btnCancelAzienda) {
+        btnCancelAzienda.addEventListener('click', () => {
+            document.getElementById('form-add-azienda').style.display = 'none';
+        });
+    } else {
+        console.warn("Pulsante 'btn-cancel-azienda' non trovato");
+    }
+    
+    // IMPORTANTE: Riattacchiamo l'event listener al submit del form
+    const aziendaForm = document.getElementById('azienda-form');
+    if (aziendaForm) {
+        aziendaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Recuperiamo gli elementi del form
+            const idElement = document.getElementById('azienda-id');
+            const nomeElement = document.getElementById('azienda-nome');
+            const viaElement = document.getElementById('azienda-via');
+            const capElement = document.getElementById('azienda-cap');
+            const comuneElement = document.getElementById('azienda-comune');
+            const referenteElement = document.getElementById('azienda-referente');
+            const emailElement = document.getElementById('azienda-email');
+            const cellulareElement = document.getElementById('azienda-cellulare');
+            const disponibilitaElement = document.getElementById('azienda-disponibilita');
+            const stageElement = document.getElementById('azienda-stage');
+            const noteElement = document.getElementById('azienda-note');
+            
+            // Verifichiamo che tutti gli elementi necessari esistano
+            if (!nomeElement || !comuneElement || !referenteElement || !emailElement) {
+                console.error("Elementi obbligatori del form non trovati");
+                alert("Si è verificato un errore: alcuni campi obbligatori non sono disponibili.");
+                return;
+            }
+            
+            const formData = {
+                id: idElement ? idElement.value || null : null,
+                nome: nomeElement.value,
+                via: viaElement ? viaElement.value : '',
+                cap: capElement ? capElement.value : '',
+                comune: comuneElement.value,
+                nome_referente: referenteElement.value,
+                email_referente: emailElement.value,
+                cellulare_referente: cellulareElement ? cellulareElement.value : '',
+                disponibilita_lavoro_estivo: disponibilitaElement ? disponibilitaElement.checked : false,
+                stage_pcto: stageElement ? stageElement.checked : false,
+                osservazioni: noteElement ? noteElement.value : ''
+            };
+
+            try {
+                const endpoint = formData.id ? '/update-azienda' : '/add-azienda';
+                const result = await fetchWithErrorHandling(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (result.success) {
+                    alert(formData.id ? 'Azienda modificata con successo!' : 'Azienda salvata con successo!');
+                    document.getElementById('form-add-azienda').style.display = 'none';
+                    loadAziende();
+                } else {
+                    alert('Errore: ' + (result.error || 'Errore sconosciuto'));
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                alert('Si è verificato un errore durante il salvataggio: ' + error.message);
+            }
+        });
+    } else {
+        console.error("Form 'azienda-form' non trovato");
+    }
+}
+// Modifica alla funzione editAzienda per gestire correttamente stage e stage_pcto
+function editAzienda(azienda) {
+    try {
+        // Verifica se il campo stage è disponibile e mappalo a stage_pcto se necessario
+        if ('stage' in azienda && !('stage_pcto' in azienda)) {
+            azienda.stage_pcto = azienda.stage;
+        }
+        
+        const elementsToUpdate = [
+            { id: 'azienda-id', property: 'value', value: azienda.id },
+            { id: 'azienda-nome', property: 'value', value: azienda.nome || '' },
+            { id: 'azienda-via', property: 'value', value: azienda.via || '' },
+            { id: 'azienda-cap', property: 'value', value: azienda.cap || '' },
+            { id: 'azienda-comune', property: 'value', value: azienda.comune || '' },
+            { id: 'azienda-referente', property: 'value', value: azienda.nome_referente || '' },
+            { id: 'azienda-email', property: 'value', value: azienda.email_referente || '' },
+            { id: 'azienda-cellulare', property: 'value', value: azienda.cellulare_referente || '' },
+            { id: 'azienda-disponibilita', property: 'checked', value: azienda.disponibilita_lavoro_estivo || false },
+            { id: 'azienda-stage', property: 'checked', value: azienda.stage_pcto || false },
+            { id: 'azienda-note', property: 'value', value: azienda.osservazioni || '' }
+        ];
+        
+        // Aggiorniamo ciascun elemento, controllando che esista
+        elementsToUpdate.forEach(element => {
+            const el = document.getElementById(element.id);
+            if (el) {
+                el[element.property] = element.value;
+            } else {
+                console.warn(`Elemento con ID '${element.id}' non trovato nel DOM`);
+            }
+        });
+        
+        // Cambia il titolo a seconda che sia modifica o aggiunta
+        const formTitle = document.getElementById('form-title');
+        if (formTitle) {
+            formTitle.textContent = 'Modifica Azienda';
+        }
+        
+        const formAddAzienda = document.getElementById('form-add-azienda');
+        if (formAddAzienda) {
+            formAddAzienda.style.display = 'flex';
+        } else {
+            console.error("Modal 'form-add-azienda' non trovato");
+            alert("Si è verificato un errore nella visualizzazione del form di modifica.");
+        }
+    } catch (error) {
+        console.error("Errore nella modifica dell'azienda:", error);
+        alert("Si è verificato un errore durante la modifica dell'azienda: " + error.message);
+    }
+}
+
+// Assicuriamoci che il documento sia caricato prima di tentare di accedere agli elementi DOM
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Impostazione del form
+        setupAziendaForm();
+        
+        // Event listener per il pulsante di aggiunta azienda
+        const btnAddAzienda = document.getElementById('btn-add-azienda');
+        if (btnAddAzienda) {
+            btnAddAzienda.addEventListener('click', function() {
+                const formAddAzienda = document.getElementById('form-add-azienda');
+                if (formAddAzienda) {
+                    formAddAzienda.style.display = 'flex';
+                    
+                    const aziendaForm = document.getElementById('azienda-form');
+                    if (aziendaForm) {
+                        aziendaForm.reset();
+                    }
+                    
+                    const aziendaId = document.getElementById('azienda-id');
+                    if (aziendaId) {
+                        aziendaId.value = '';
+                    }
+                    
+                    const formTitle = document.getElementById('form-title');
+                    if (formTitle) {
+                        formTitle.textContent = 'Aggiungi Azienda';
+                    }
+                } else {
+                    console.error("Modal 'form-add-azienda' non trovato");
+                }
+            });
+        } else {
+            console.warn("Pulsante 'btn-add-azienda' non trovato");
+        }
+        
+        // Event listener per la ricerca aziende
+        const btnSearchAziende = document.getElementById('btn-search-aziende');
+        if (btnSearchAziende) {
+            btnSearchAziende.addEventListener('click', cercaAziende);
+        }
+        
+        const searchAziende = document.getElementById('search-aziende');
+        if (searchAziende) {
+            searchAziende.addEventListener('keyup', event => {
+                if (event.key === 'Enter') {
+                    cercaAziende();
+                }
+            });
+        }
+
+        // Event listener per il reset della ricerca aziende
+        const btnResetAziende = document.getElementById('btn-reset-aziende');
+        if (btnResetAziende) {
+            btnResetAziende.addEventListener('click', () => {
+                const searchAziende = document.getElementById('search-aziende');
+                if (searchAziende) {
+                    searchAziende.value = '';
+                }
+                renderizzaAziende(allAziende);
+            });
+        }
+    } catch (error) {
+        console.error("Errore durante l'inizializzazione:", error);
+        alert("Si è verificato un errore durante l'inizializzazione: " + error.message);
+    }
+});
+
+// Funzione per cercare aziende (aggiunta campo stage_pcto nella ricerca)
+function cercaAziende() {
+    const searchTerm = document.getElementById('search-aziende').value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        renderizzaAziende(allAziende);
+        return;
+    }
+    
+    const risultati = allAziende.filter(azienda => {
+        return (
+            (azienda.nome && azienda.nome.toLowerCase().includes(searchTerm)) ||
+            (azienda.comune && azienda.comune.toLowerCase().includes(searchTerm)) ||
+            (azienda.nome_referente && azienda.nome_referente.toLowerCase().includes(searchTerm)) ||
+            (azienda.email_referente && azienda.email_referente.toLowerCase().includes(searchTerm))
+        );
+    });
+    
+    renderizzaAziende(risultati);
+}
+
+// Funzione per eliminare un'azienda
+async function deleteAzienda(id) {
+    if (!confirm('Sei sicuro di voler eliminare questa azienda?')) return;
+
+    try {
+        const result = await fetchWithErrorHandling('/delete-azienda', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id })
+        });
+
+        if (result.success) {
+            alert('Azienda eliminata con successo!');
+            loadAziende();
+        } else {
+            alert('Errore: ' + (result.error || 'Errore sconosciuto'));
+        }
+    } catch (error) {
+        console.error('Errore:', error);
+        alert('Si è verificato un errore durante l\'eliminazione: ' + error.message);
+    }
+}
+// STUDENTI --------------------------------------------------------
+// Funzione per aprire il modal di aggiunta/modifica studente
+// Modifichiamo la funzione loadStudenti per salvare i dati
+function loadStudenti() {
+    fetchWithErrorHandling('/get-studenti')
+        .then(studenti => {
+            const lista = document.getElementById('studenti-list');
+            if (!Array.isArray(studenti)) {
+                throw new Error('Formato dati non valido');
+            }
+            
+            // Salviamo i dati originali
+            allStudenti = [...studenti];
+            
+            // Renderizziamo la tabella
+            renderizzaStudenti(studenti);
+        })
+        .catch(error => {
+            console.error('Errore nel caricamento studenti:', error);
+            document.getElementById('studenti-list').innerHTML = 'Errore nel caricamento: ' + error.message;
+        });
+}
+
+// Funzione per renderizzare la tabella degli studenti
+function renderizzaStudenti(studenti) {
+    const lista = document.getElementById('studenti-list');
+    lista.innerHTML = `
+        <div class="actions-bar">
+            <button id="btn-delete-class" class="btn danger">Elimina studenti per classe</button>
+        </div>
+        <div id="delete-class-container" style="display: none; margin-bottom: 20px;">
+            <div class="form-group" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="delete-class-input" placeholder="Inserisci la classe (es. 4A)" class="form-control">
+                <button id="btn-confirm-delete-class" class="btn danger">Elimina</button>
+                <button id="btn-cancel-delete-class" class="btn secondary">Annulla</button>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Classe</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${studenti.length > 0 ? studenti.map(studente => `
+                    <tr>
+                        <td>${studente.nome || '-'}</td>
+                        <td>${studente.email || '-'}</td>
+                        <td>${studente.classe || '-'}</td>
+                        <td>
+                            <button onclick="editStudente(${JSON.stringify(studente).replace(/"/g, '&quot;')})" class="btn primary btn-small">Modifica</button>
+                            <button onclick="deleteStudente(${studente.id})" class="btn danger btn-small">Elimina</button>
+                        </td>
+                    </tr>
+                `).join('') : '<tr><td colspan="4" style="text-align: center;">Nessuno studente trovato</td></tr>'}
+            </tbody>
+        </table>
+    `;
+
+    // Aggiungiamo gli event listener per il nuovo bottone e il form di eliminazione per classe
+    document.getElementById('btn-delete-class').addEventListener('click', () => {
+        document.getElementById('delete-class-container').style.display = 'block';
+    });
+
+    document.getElementById('btn-cancel-delete-class').addEventListener('click', () => {
+        document.getElementById('delete-class-container').style.display = 'none';
+        document.getElementById('delete-class-input').value = '';
+    });
+
+    document.getElementById('btn-confirm-delete-class').addEventListener('click', () => {
+        deleteStudentiByClasse(document.getElementById('delete-class-input').value.trim());
+    });
+
+    // Aggiungiamo anche l'event listener per il tasto Enter nel campo di input
+    document.getElementById('delete-class-input').addEventListener('keyup', event => {
+        if (event.key === 'Enter') {
+            deleteStudentiByClasse(document.getElementById('delete-class-input').value.trim());
+        }
+    });
+}
+
+// Funzione per cercare studenti
+function cercaStudenti() {
+    const searchTerm = document.getElementById('search-studenti').value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        renderizzaStudenti(allStudenti);
+        return;
+    }
+    
+    const risultati = allStudenti.filter(studente => {
+        return (
+            (studente.nome && studente.nome.toLowerCase().includes(searchTerm)) ||
+            (studente.email && studente.email.toLowerCase().includes(searchTerm)) ||
+            (studente.classe && studente.classe.toLowerCase().includes(searchTerm))
+        );
+    });
+    
+    renderizzaStudenti(risultati);
+}
+
+// Event listener per la ricerca studenti
+document.getElementById('btn-search-studenti').addEventListener('click', cercaStudenti);
+document.getElementById('search-studenti').addEventListener('keyup', event => {
+    if (event.key === 'Enter') {
+        cercaStudenti();
+    }
+});
+
+// Event listener per il reset della ricerca studenti
+document.getElementById('btn-reset-studenti').addEventListener('click', () => {
+    document.getElementById('search-studenti').value = '';
+    renderizzaStudenti(allStudenti);
+});
+
+document.getElementById('btn-add-studente').addEventListener('click', () => {
+    document.getElementById('form-add-studente').style.display = 'flex';
+    document.getElementById('studente-form').reset();
+    document.getElementById('studente-id').value = '';
+});
+
+document.getElementById('btn-cancel-studente').addEventListener('click', () => {
+    document.getElementById('form-add-studente').style.display = 'none';
+});
+
+// Funzione per validare il formato della classe (deve essere un numero seguito da una lettera maiuscola)
+function validateClasse(classe) {
+    const re = /^[4][A-Z]$/;
+    return re.test(classe);
+}
+
+// Funzione per eliminare tutti gli studenti di una classe specifica
+async function deleteStudentiByClasse(classe) {
+    if (!classe) {
+        alert('Inserisci una classe valida');
+        return;
+    }
+
+    // Validare il formato della classe
+    if (!validateClasse(classe)) {
+        alert('Il formato della classe non è valido. Deve essere un numero (4) seguito da una lettera maiuscola (es. 4A, 4B)');
+        return;
+    }
+
+    // Cercare tutti gli studenti di quella classe
+    const studentiDaEliminare = allStudenti.filter(studente => studente.classe === classe);
+
+    if (studentiDaEliminare.length === 0) {
+        alert('Nessuno studente trovato per la classe ' + classe);
+        return;
+    }
+
+    // Chiedere conferma all'utente
+    if (!confirm(`Sei sicuro di voler eliminare tutti i ${studentiDaEliminare.length} studenti della classe ${classe}?`)) {
+        return;
+    }
+
+    // Mostrare un indicatore di caricamento
+    const deleteClassContainer = document.getElementById('delete-class-container');
+    const originalContent = deleteClassContainer.innerHTML;
+    deleteClassContainer.innerHTML = '<div class="loading">Eliminazione in corso...</div>';
+
+    // Eliminare ogni studente uno per uno
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const studente of studentiDaEliminare) {
+        try {
+            const result = await fetchWithErrorHandling('/delete-studente', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: studente.id })
+            });
+
+            if (result.success) {
+                successCount++;
+            } else {
+                failCount++;
+                console.error('Errore nell\'eliminazione dello studente:', studente.nome, result.error);
+            }
+        } catch (error) {
+            failCount++;
+            console.error('Errore nell\'eliminazione dello studente:', studente.nome, error);
+        }
+    }
+
+    // Ripristinare il contenuto del container
+    deleteClassContainer.innerHTML = originalContent;
+    
+    // Aggiornare gli event listener
+    document.getElementById('btn-cancel-delete-class').addEventListener('click', () => {
+        document.getElementById('delete-class-container').style.display = 'none';
+        document.getElementById('delete-class-input').value = '';
+    });
+
+    document.getElementById('btn-confirm-delete-class').addEventListener('click', () => {
+        deleteStudentiByClasse(document.getElementById('delete-class-input').value.trim());
+    });
+
+    document.getElementById('delete-class-input').addEventListener('keyup', event => {
+        if (event.key === 'Enter') {
+            deleteStudentiByClasse(document.getElementById('delete-class-input').value.trim());
+        }
+    });
+
+    // Mostrare un messaggio di completamento
+    if (failCount === 0) {
+        alert(`Eliminazione completata: ${successCount} studenti rimossi dalla classe ${classe}`);
+    } else {
+        alert(`Eliminazione completata con errori: ${successCount} studenti rimossi, ${failCount} errori`);
+    }
+
+    // Nascondere il form di eliminazione
+    document.getElementById('delete-class-container').style.display = 'none';
+    document.getElementById('delete-class-input').value = '';
+    
+    // Ricaricare la lista degli studenti
+    loadStudenti();
+}
+
+// Submit form studenti
+document.getElementById('studente-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Validazione dei campi
+    const nomeStudente = document.getElementById('studente-nome').value.trim();
+    const emailStudente = document.getElementById('studente-email').value.trim();
+    const classeStudente = document.getElementById('studente-classe').value.trim();
+    
+    if (!nomeStudente) {
+        alert('Il nome dello studente è obbligatorio');
+        return;
+    }
+    
+    if (!emailStudente) {
+        alert('L\'email dello studente è obbligatoria');
+        return;
+    }
+    
+    if (!validateEmail(emailStudente)) {
+        alert('Inserisci un indirizzo email valido');
+        return;
+    }
+    
+    if (!classeStudente) {
+        alert('La classe dello studente è obbligatoria');
+        return;
+    }
+    
+    // Validazione specifica per il formato della classe
+    if (!validateClasse(classeStudente)) {
+        alert('Il formato della classe non è valido. Deve essere un numero (4) seguito da una lettera maiuscola (es. 4A, 4B)');
+        return;
+    }
+    
+    const formData = {
+        id: document.getElementById('studente-id').value || null,
+        nome: nomeStudente,
+        email: emailStudente,
+        classe: classeStudente
+    };
+
+    try {
+        const endpoint = formData.id ? '/update-studente' : '/add-studente';
+        const result = await fetchWithErrorHandling(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (result.success) {
+            alert(formData.id ? 'Studente modificato con successo!' : 'Studente salvato con successo!');
+            document.getElementById('form-add-studente').style.display = 'none';
+            loadStudenti();
+        } else {
+            alert('Errore: ' + (result.error || 'Errore sconosciuto'));
+        }
+    } catch (error) {
+        console.error('Errore:', error);
+        alert('Si è verificato un errore durante il salvataggio: ' + error.message);
+    }
+});
+
+// Funzione per validare l'email
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+// Funzione per modificare uno studente
+function editStudente(studente) {
+    document.getElementById('studente-id').value = studente.id;
+    document.getElementById('studente-nome').value = studente.nome || '';
+    document.getElementById('studente-email').value = studente.email || '';
+    document.getElementById('studente-classe').value = studente.classe || '';
+
+    document.getElementById('form-add-studente').style.display = 'flex';
+}
+
+// Funzione per eliminare uno studente
+async function deleteStudente(id) {
+    if (!confirm('Sei sicuro di voler eliminare questo studente?')) return;
+
+    try {
+        const result = await fetchWithErrorHandling('/delete-studente', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id })
+        });
+
+        if (result.success) {
+            alert('Studente eliminato con successo!');
+            loadStudenti();
+        } else {
+            alert('Errore: ' + (result.error || 'Errore sconosciuto'));
+        }
+    } catch (error) {
+        console.error('Errore:', error);
+        alert('Si è verificato un errore durante l\'eliminazione: ' + error.message);
+    }
+}
+// Aggiungiamo la funzionalità di importazione CSV alla sezione studenti
+// Funzione per aprire il modal di caricamento CSV
+function showCsvImportModal() {
+    document.getElementById('csv-import-modal').style.display = 'flex';
+}
+
+// Funzione per chiudere il modal di caricamento CSV
+function closeCsvImportModal() {
+    document.getElementById('csv-import-modal').style.display = 'none';
+    document.getElementById('csv-file').value = '';
+    document.getElementById('csv-preview').innerHTML = '';
+    document.getElementById('csv-import-btn').disabled = true;
+}
+
+// Funzione per visualizzare l'anteprima del CSV
+function previewCsv(event) {
+    const file = event.target.files[0];
+    if (!file) {
+        document.getElementById('csv-preview').innerHTML = '';
+        document.getElementById('csv-import-btn').disabled = true;
+        return;
+    }
+
+    // Verificare che sia un file CSV
+    if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+        alert('Per favore seleziona un file CSV valido');
+        document.getElementById('csv-file').value = '';
+        document.getElementById('csv-preview').innerHTML = '';
+        document.getElementById('csv-import-btn').disabled = true;
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const csvData = e.target.result;
+        
+        // Parsing del CSV con Papa Parse
+        Papa.parse(csvData, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                if (results.errors.length > 0) {
+                    document.getElementById('csv-preview').innerHTML = `
+                        <div class="error-message">
+                            Errori nel parsing del CSV: ${results.errors.map(e => e.message).join(', ')}
+                        </div>
+                    `;
+                    document.getElementById('csv-import-btn').disabled = true;
+                    return;
+                }
+
+                // Verificare che il CSV contenga i campi necessari
+                const firstRow = results.data[0];
+                if (!firstRow || !firstRow.nome || !firstRow.email || !firstRow.classe) {
+                    document.getElementById('csv-preview').innerHTML = `
+                        <div class="error-message">
+                            Il file CSV deve contenere le colonne 'nome', 'email' e 'classe'.
+                        </div>
+                    `;
+                    document.getElementById('csv-import-btn').disabled = true;
+                    return;
+                }
+
+                // Mostrare anteprima dei dati (primi 5 record)
+                const previewData = results.data.slice(0, 5);
+                document.getElementById('csv-preview').innerHTML = `
+                    <h3>Anteprima (${results.data.length} record totali):</h3>
+                    <table class="preview-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Classe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${previewData.map(row => `
+                                <tr>
+                                    <td>${row.nome || '-'}</td>
+                                    <td>${row.email || '-'}</td>
+                                    <td>${row.classe || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    ${results.data.length > 5 ? '<p>... e altri record</p>' : ''}
+                `;
+                
+                // Abilitiamo il pulsante di importazione
+                document.getElementById('csv-import-btn').disabled = false;
+            }
+        });
+    };
+    reader.readAsText(file);
+}
+
+// Funzione per importare i dati CSV
+async function importCsv() {
+    const fileInput = document.getElementById('csv-file');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Seleziona un file CSV prima di procedere');
+        return;
+    }
+    
+    // Mostrare un indicatore di caricamento
+    document.getElementById('csv-import-status').innerHTML = '<div class="loading">Importazione in corso...</div>';
+    document.getElementById('csv-import-btn').disabled = true;
+    
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const csvData = e.target.result;
+        
+        try {
+            const result = await fetchWithErrorHandling('/import-studenti-csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/csv',
+                },
+                body: csvData
+            });
+            
+            if (result.success) {
+                document.getElementById('csv-import-status').innerHTML = `
+                    <div class="success-message">
+                        Importazione completata con successo!<br>
+                        ${result.inserted} studenti aggiunti.<br>
+                        ${result.updated} studenti aggiornati.<br>
+                        ${result.errors ? result.errors.length + ' errori.' : 'Nessun errore.'}
+                    </div>
+                `;
+                
+                // Se ci sono errori, mostrarli
+                if (result.errors && result.errors.length > 0) {
+                    document.getElementById('csv-import-status').innerHTML += `
+                        <div class="error-details">
+                            <h4>Dettagli errori:</h4>
+                            <ul>
+                                ${result.errors.map(err => `<li>${err}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // Ricaricare la lista degli studenti dopo un breve ritardo
+                setTimeout(() => {
+                    loadStudenti();
+                    // Non chiudiamo automaticamente il modal per permettere all'utente di vedere i risultati
+                }, 1000);
+            } else {
+                document.getElementById('csv-import-status').innerHTML = `
+                    <div class="error-message">
+                        Errore durante l'importazione: ${result.error || 'Errore sconosciuto'}
+                    </div>
+                `;
+                document.getElementById('csv-import-btn').disabled = false;
+            }
+        } catch (error) {
+            console.error('Errore durante l\'importazione CSV:', error);
+            document.getElementById('csv-import-status').innerHTML = `
+                <div class="error-message">
+                    Si è verificato un errore durante l'importazione: ${error.message}
+                </div>
+            `;
+            document.getElementById('csv-import-btn').disabled = false;
+        }
+    };
+    reader.readAsText(file);
+}
+
+// Aggiungiamo il modal di importazione CSV all'HTML (da inserire nel DOM)
+function addCsvImportModal() {
+    // Prima verifichiamo se esiste già l'elemento
+    if (document.getElementById('csv-import-modal')) {
+        return;
+    }
+    
+    const modalHtml = `
+        <div id="csv-import-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Importa studenti da CSV</h2>
+                    <span class="close" onclick="closeCsvImportModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>Seleziona un file CSV con i seguenti campi: nome, email, classe</p>
+                    <div class="form-group">
+                        <label for="csv-file">File CSV:</label>
+                        <input type="file" id="csv-file" accept=".csv, text/csv" onchange="previewCsv(event)">
+                    </div>
+                    <div id="csv-preview"></div>
+                    <div id="csv-import-status"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="csv-import-btn" class="btn primary" onclick="importCsv()" disabled>Importa</button>
+                    <button class="btn secondary" onclick="closeCsvImportModal()">Annulla</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Inserire il modal nel DOM
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// Modificare la funzione loadStudenti per aggiungere il pulsante di importazione CSV
+function loadStudenti() {
+    // Assicuriamoci che il modal di importazione CSV sia presente nel DOM
+    addCsvImportModal();
+    
+    fetchWithErrorHandling('/get-studenti')
+        .then(studenti => {
+            const lista = document.getElementById('studenti-list');
+            if (!Array.isArray(studenti)) {
+                throw new Error('Formato dati non valido');
+            }
+            
+            // Salviamo i dati originali
+            allStudenti = [...studenti];
+            
+            // Renderizziamo la tabella
+            renderizzaStudenti(studenti);
+        })
+        .catch(error => {
+            console.error('Errore nel caricamento studenti:', error);
+            document.getElementById('studenti-list').innerHTML = 'Errore nel caricamento: ' + error.message;
+        });
+}
+
+// Modifichiamo la funzione renderizzaStudenti per aggiungere il pulsante di importazione CSV
+function renderizzaStudenti(studenti) {
+    const lista = document.getElementById('studenti-list');
+    lista.innerHTML = `
+        <div class="actions-bar">
+            <button id="btn-import-csv" class="btn primary" style="margin-right: 10px;">Importa da CSV</button>
+            <button id="btn-delete-class" class="btn danger">Elimina studenti per classe</button>
+        </div>
+        <div id="delete-class-container" style="display: none; margin-bottom: 20px;">
+            <div class="form-group" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="delete-class-input" placeholder="Inserisci la classe (es. 4A)" class="form-control">
+                <button id="btn-confirm-delete-class" class="btn danger">Elimina</button>
+                <button id="btn-cancel-delete-class" class="btn secondary">Annulla</button>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Classe</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${studenti.length > 0 ? studenti.map(studente => `
+                    <tr>
+                        <td>${studente.nome || '-'}</td>
+                        <td>${studente.email || '-'}</td>
+                        <td>${studente.classe || '-'}</td>
+                        <td>
+                            <button onclick="editStudente(${JSON.stringify(studente).replace(/"/g, '&quot;')})" class="btn primary btn-small">Modifica</button>
+                            <button onclick="deleteStudente(${studente.id})" class="btn danger btn-small">Elimina</button>
+                        </td>
+                    </tr>
+                `).join('') : '<tr><td colspan="4" style="text-align: center;">Nessuno studente trovato</td></tr>'}
+            </tbody>
+        </table>
+    `;
+
+    // Aggiungiamo gli event listener per i bottoni
+    document.getElementById('btn-import-csv').addEventListener('click', showCsvImportModal);
+    
+    document.getElementById('btn-delete-class').addEventListener('click', () => {
+        document.getElementById('delete-class-container').style.display = 'block';
+    });
+
+    document.getElementById('btn-cancel-delete-class').addEventListener('click', () => {
+        document.getElementById('delete-class-container').style.display = 'none';
+        document.getElementById('delete-class-input').value = '';
+    });
+
+    document.getElementById('btn-confirm-delete-class').addEventListener('click', () => {
+        deleteStudentiByClasse(document.getElementById('delete-class-input').value.trim());
+    });
+
+    // Aggiungiamo anche l'event listener per il tasto Enter nel campo di input
+    document.getElementById('delete-class-input').addEventListener('keyup', event => {
+        if (event.key === 'Enter') {
+            deleteStudentiByClasse(document.getElementById('delete-class-input').value.trim());
+        }
+    });
+}
+
+// Assicuriamoci di caricare la libreria Papa Parse
+function loadPapaParseLibrary() {
+    if (window.Papa) {
+        return; // Se già caricata, non facciamo nulla
+    }
+    
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js';
+    script.integrity = 'sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==';
+    script.crossOrigin = 'anonymous';
+    script.referrerPolicy = 'no-referrer';
+    
+    // Aggiungiamo un listener per sapere quando la libreria è caricata
+    script.onload = function() {
+        console.log('Papa Parse caricato con successo');
+    };
+    
+    document.head.appendChild(script);
+}
+
+// Chiamiamo la funzione per caricare Papa Parse quando la pagina è pronta
+document.addEventListener('DOMContentLoaded', function() {
+    loadPapaParseLibrary();
+});
+
+// Aggiungiamo stili CSS per il modal e le tabelle di anteprima
+function addCsvImportStyles() {
+    // Verifichiamo se gli stili sono già stati aggiunti
+    if (document.getElementById('csv-import-styles')) {
+        return;
+    }
+    
+    const styles = `
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preview-table th, .preview-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .preview-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .success-message {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .error-message {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .error-details {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .loading:after {
+            content: " ";
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6px solid #3498db;
+            border-color: #3498db transparent #3498db transparent;
+            animation: loading 1.2s linear infinite;
+        }
+        
+        @keyframes loading {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    `;
+    
+    const styleElement = document.createElement('style');
+    styleElement.id = 'csv-import-styles';
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+}
+
+// Chiamiamo la funzione per aggiungere gli stili
+document.addEventListener('DOMContentLoaded', function() {
+    addCsvImportStyles();
+});
+       // ASSOCIAZIONI --------------------------------------------------------
+// Modifichiamo la funzione loadAssociazioni per salvare i dati
+function loadAssociazioni() {
+    fetchWithErrorHandling('/get-associazioni')
+        .then(data => {
+            const lista = document.getElementById('associazioni-list');
+            
+            if (!data || !data.associazioni || !Array.isArray(data.associazioni)) {
+                throw new Error('Formato dati non valido');
+            }
+            
+            // Salviamo i dati originali
+            allAssociazioni = [...data.associazioni];
+            
+            // Renderizziamo la tabella
+            renderizzaAssociazioni(data.associazioni);
+        })
+        .catch(error => {
+            console.error('Errore nel caricamento associazioni:', error);
+            document.getElementById('associazioni-list').innerHTML = 'Errore nel caricamento: ' + error.message;
+        });
+}
+
+// Funzione per formattare la data in formato italiano
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+}
+
+// Funzione per renderizzare la tabella delle associazioni
+function renderizzaAssociazioni(associazioni) {
+    const lista = document.getElementById('associazioni-list');
+    lista.innerHTML = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Studente</th>
+                    <th>Classe</th>
+                    <th>Email Studente</th>
+                    <th>Azienda</th>
+                    <th>Comune</th>
+                    <th>Data Inizio</th>
+                    <th>Data Fine</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${associazioni.length > 0 ? associazioni.map(associazione => `
+                    <tr>
+                        <td>${associazione.id || '-'}</td>
+                        <td>${associazione.studente_nome || '-'}</td>
+                        <td>${associazione.studente_classe || '-'}</td>
+                        <td>${associazione.studente_email || '-'}</td>
+                        <td>${associazione.azienda_nome || '-'}</td>
+                        <td>${associazione.azienda_comune || '-'}</td>
+                        <td>${formatDate(associazione.data_inizio)}</td>
+                        <td>${formatDate(associazione.data_fine)}</td>
+                        <td>
+                            <button onclick="editAssociazione(${JSON.stringify(associazione).replace(/"/g, '&quot;')})" class="btn primary btn-small">Modifica</button>
+                            <button onclick="deleteAssociazione(${associazione.id})" class="btn danger btn-small">Elimina</button>
+                        </td>
+                    </tr>
+                `).join('') : '<tr><td colspan="8" style="text-align: center;">Nessuna associazione trovata</td></tr>'}
+            </tbody>
+        </table>
+    `;
+}
+
+// Funzione per cercare associazioni
+function cercaAssociazioni() {
+    const searchTerm = document.getElementById('search-associazioni').value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        renderizzaAssociazioni(allAssociazioni);
+        return;
+    }
+    
+    const risultati = allAssociazioni.filter(associazione => {
+        return (
+            (associazione.studente_nome && associazione.studente_nome.toLowerCase().includes(searchTerm)) ||
+            (associazione.studente_classe && associazione.studente_classe.toLowerCase().includes(searchTerm)) ||
+            (associazione.studente_email && associazione.studente_email.toLowerCase().includes(searchTerm)) ||
+            (associazione.azienda_nome && associazione.azienda_nome.toLowerCase().includes(searchTerm)) ||
+            (associazione.azienda_comune && associazione.azienda_comune.toLowerCase().includes(searchTerm)) ||
+            (associazione.data_inizio && associazione.data_inizio.includes(searchTerm)) ||
+            (associazione.data_fine && associazione.data_fine.includes(searchTerm))
+        );
+    });
+    
+    renderizzaAssociazioni(risultati);
+}
+
+// Event listener per la ricerca associazioni
+document.getElementById('btn-search-associazioni').addEventListener('click', cercaAssociazioni);
+document.getElementById('search-associazioni').addEventListener('keyup', event => {
+    if (event.key === 'Enter') {
+        cercaAssociazioni();
+    }
+});
+
+// Event listener per il reset della ricerca associazioni
+document.getElementById('btn-reset-associazioni').addEventListener('click', () => {
+    document.getElementById('search-associazioni').value = '';
+    renderizzaAssociazioni(allAssociazioni);
+});
+
+document.getElementById('btn-add-associazione').addEventListener('click', async () => {
+    // Carica studenti e aziende per i select
+    try {
+        const [studentiResponse, aziendeResponse] = await Promise.all([
+            fetchWithErrorHandling('/get-studenti'),
+            fetchWithErrorHandling('/get-aziende')
+        ]);
+        
+        if (!Array.isArray(studentiResponse) || !Array.isArray(aziendeResponse)) {
+            throw new Error('Formato dati non valido');
+        }
+        
+        const studenti = studentiResponse;
+        const aziende = aziendeResponse;
+
+        const selectStudente = document.getElementById('associazione-studente');
+        const selectAzienda = document.getElementById('associazione-azienda');
+        
+        if (studenti.length === 0) {
+            alert('Non ci sono studenti disponibili. Aggiungi prima uno studente.');
+            return;
+        }
+        
+        if (aziende.length === 0) {
+            alert('Non ci sono aziende disponibili. Aggiungi prima un\'azienda.');
+            return;
+        }
+        
+        selectStudente.innerHTML = studenti.map(s => 
+            `<option value="${s.id}">${s.nome} ${s.classe ? '(' + s.classe + ')' : ''} - ${s.email}</option>`
+        ).join('');
+        
+        selectAzienda.innerHTML = aziende.map(a => 
+            `<option value="${a.id}">${a.nome} (${a.comune || 'N/A'})</option>`
+        ).join('');
+
+        // Reset delle date
+        document.getElementById('associazione-data-inizio').value = '';
+        document.getElementById('associazione-data-fine').value = '';
+        
+        // Reset dell'ID nascosto
+        document.getElementById('associazione-id').value = '';
+
+        document.getElementById('form-add-associazione').style.display = 'flex';
+    } catch (error) {
+        console.error('Errore:', error);
+        alert('Impossibile caricare studenti o aziende: ' + error.message);
+    }
+});
+
+document.getElementById('btn-cancel-associazione').addEventListener('click', () => {
+    document.getElementById('form-add-associazione').style.display = 'none';
+});
+
+// Submit form associazioni
+document.getElementById('associazione-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const idStudente = document.getElementById('associazione-studente').value;
+    const idAzienda = document.getElementById('associazione-azienda').value;
+    const dataInizio = document.getElementById('associazione-data-inizio').value;
+    const dataFine = document.getElementById('associazione-data-fine').value;
+    
+    if (!idStudente || !idAzienda) {
+        alert('Seleziona sia uno studente che un\'azienda');
+        return;
+    }
+    
+    if (!dataInizio) {
+        alert('La data di inizio è obbligatoria');
+        return;
+    }
+    
+    if (!dataFine) {
+        alert('La data di fine è obbligatoria');
+        return;
+    }
+    
+    if (new Date(dataFine) < new Date(dataInizio)) {
+        alert('La data di fine deve essere successiva alla data di inizio');
+        return;
+    }
+    
+    const formData = {
+        id: document.getElementById('associazione-id').value || null,
+        id_studente: idStudente,
+        id_azienda: idAzienda,
+        data_inizio: dataInizio,
+        data_fine: dataFine
+    };
+
+    try {
+        const endpoint = formData.id ? '/update-associazione' : '/add-associazione';
+        const result = await fetchWithErrorHandling(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (result.success) {
+            alert(formData.id ? 'Associazione modificata con successo!' : 'Associazione salvata con successo!');
+            document.getElementById('form-add-associazione').style.display = 'none';
+            loadAssociazioni();
+        } else {
+            alert('Errore: ' + (result.error || 'Errore sconosciuto'));
+        }
+    } catch (error) {
+        console.error('Errore:', error);
+        alert('Si è verificato un errore durante il salvataggio: ' + error.message);
+    }
+});
+
+// Funzione per modificare un'associazione
+function editAssociazione(associazione) {
+    document.getElementById('associazione-id').value = associazione.id;
+    
+    // Ricarica studenti e aziende e imposta i valori correnti
+    Promise.all([
+        fetchWithErrorHandling('/get-studenti'),
+        fetchWithErrorHandling('/get-aziende')
+    ])
+    .then(([studenti, aziende]) => {
+        if (!Array.isArray(studenti) || !Array.isArray(aziende)) {
+            throw new Error('Formato dati non valido');
+        }
+        
+        const selectStudente = document.getElementById('associazione-studente');
+        const selectAzienda = document.getElementById('associazione-azienda');
+        
+        selectStudente.innerHTML = studenti.map(s => 
+            `<option value="${s.id}">${s.nome} ${s.classe ? '(' + s.classe + ')' : ''} - ${s.email}</option>`
+        ).join('');
+        
+        selectAzienda.innerHTML = aziende.map(a => 
+            `<option value="${a.id}">${a.nome} (${a.comune || 'N/A'})</option>`
+        ).join('');
+        
+        // Imposta i valori correnti
+        selectStudente.value = associazione.id_studente;
+        selectAzienda.value = associazione.id_azienda;
+        
+        // Imposta le date
+        document.getElementById('associazione-data-inizio').value = associazione.data_inizio || '';
+        document.getElementById('associazione-data-fine').value = associazione.data_fine || '';
+        
+        document.getElementById('form-add-associazione').style.display = 'flex';
+    })
+    .catch(error => {
+        console.error('Errore nel caricamento dati:', error);
+        alert('Errore nel caricamento dati: ' + error.message);
+    });
+}
+
+// Funzione per eliminare un'associazione
+async function deleteAssociazione(id) {
+    if (!confirm('Sei sicuro di voler eliminare questa associazione?')) return;
+
+    try {
+        const result = await fetchWithErrorHandling('/delete-associazione', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id })
+        });
+
+        if (result.success) {
+            alert('Associazione eliminata con successo!');
+            loadAssociazioni();
+        } else {
+            alert('Errore: ' + (result.error || 'Errore sconosciuto'));
+        }
+    } catch (error) {
+        console.error('Errore:', error);
+        alert('Si è verificato un errore durante l\'eliminazione: ' + error.message);
+    }
+}
+
+    // Carica la sezione aziende all'avvio
+    document.addEventListener('DOMContentLoaded', () => {
+        loadAziende();
+    });
+</script>
+</body>
+</html>

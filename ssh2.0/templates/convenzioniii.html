@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generazione Convenzioni - Sistema di Gestione</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        /* Header principale */
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .user-area {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Stile per il menu hamburger */
+        .hamburger {
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 24px;
+        }
+        
+        .hamburger-line {
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 2px;
+        }
+        
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 34px;
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            z-index: 100;
+        }
+        
+        .dropdown.active {
+            display: block;
+        }
+        
+        .dropdown a, .dropdown button {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            text-align: left;
+            width: 100%;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown a:hover, .dropdown button:hover {
+            background-color: #555;
+        }
+        
+        .dropdown .btn-logout {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown .btn-logout:hover {
+            background-color: #c82333;
+        }
+        
+        /* Barra di navigazione */
+        nav {
+            background: #444;
+            color: #fff;
+            padding: 0.5rem;
+        }
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+        }
+        
+        nav ul li {
+            margin: 0 10px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        
+        /* Sezioni di gestione dati */
+        .data-management-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Tabelle dati */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background-color: #555;
+            color: white;
+            padding: 12px;
+        }
+        
+        .data-table td {
+            background-color: white;
+        }
+        
+        /* Pulsanti */
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            min-width: 150px;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+        
+        .btn.primary { background: #007bff; }
+        .btn.success { background: #27ae60; }
+        .btn.danger { background: #e74c3c; }
+        .btn.small { padding: 5px 10px; min-width: auto; }
+        .btn-lightgreen { background-color: #2ecc71; }
+        .btn-yellow { background-color: #f1c40f; }
+        
+        /* Sezione generazione convenzioni */
+        .convenzioni-section {
+            margin: 30px auto;
+            max-width: 800px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .convenzioni-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .convenzioni-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .single-convenzione {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .convenzioni-options form {
+            width: 100%;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .generate-all {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #ddd;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="user-area">
+            <div class="hamburger" onclick="toggleDropdown()">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+            
+            <div class="dropdown" id="dropdown-menu">
+                <a href="/" title="Torna alla home">Home</a>
+                <a href="/sito_mail" title="go to mail">Mail</a>
+                <a href="/dashboard" title="dashboard">Dashboard</a>
+                <a href="/export-associazioni" title="Esporta associazioni">File inail</a>
+                <button onclick="window.location.href='/logout'" class="btn-logout">Logout</button>
+            </div>
+        </div>
+        <h1>Sistema di Gestione Studenti e Aziende</h1>
+    </header>
+    
+    
+    <div class="container">
+        <div class="convenzioni-section">
+            <h2>Generazione Convenzioni</h2>
+            <h4><strong>Elaborazione di tutte le convenzioni completata. I file sono stati salvati nella directory 'convenzioni_generate'</strong></h4>
+            
+            <div class="convenzioni-options">
+                <div class="single-convenzione">
+                    <h3>Genera una singola convenzione</h3>
+                    <p>Inserisci l'ID dell'associazione per generare la relativa convenzione.</p>
+                    
+                    <form action="/generate" method="get">
+                        <div class="form-group">
+                            <label for="convenzione_id">ID Associazione:</label>
+                            <input type="number" id="convenzione_id" name="convenzione_id" required min="1">
+                        </div>
+                        <input type="hidden" name="action" value="single">
+                        <button type="submit" class="btn primary">Genera Convenzione</button>
+                    </form>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="generate-all">
+                    <h3>Genera tutte le convenzioni</h3>
+                    <p>Clicca sul pulsante per generare le convenzioni per tutte le associazioni presenti nel database.</p>
+                    <p><strong>Nota:</strong> I file saranno salvati nella cartella "convenzioni_generate".</p>
+                    
+                    <a href="/process-all" class="btn success">Genera tutte le convenzioni</a>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <p><strong>Informazioni aggiuntive:</strong></p>
+                <ul style="text-align: left;">
+                    <li>Le convenzioni vengono generate in formato .docx</li>
+                    <li>Viene utilizzato il template base "template.docx"</li>
+                    <li>I dati sono prelevati automaticamente dal database</li>
+                    <li>Per ogni associazione vengono inseriti i dati di studente e azienda</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdown-menu');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Chiude il dropdown se si clicca altrove nella pagina
+        window.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('dropdown-menu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (!hamburger.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

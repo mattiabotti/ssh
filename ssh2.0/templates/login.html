@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Errore 404 - Pagina non trovata</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            padding: 40px;
+        }
+        
+        .error-code {
+            font-size: 180px;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1;
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .error-message {
+            font-size: 28px;
+            margin: 10px 0 30px;
+            color: #555;
+        }
+        
+        .login-message {
+            font-size: 22px;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        
+        .home-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-top: 30px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .home-button:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 600px) {
+            .error-code {
+                font-size: 120px;
+            }
+            
+            .error-message {
+                font-size: 22px;
+            }
+            
+            .login-message {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="error-code">404</h1>
+        <p class="error-message">Pagina non trovata</p>
+        <p class="login-message">Effettua il login per accedere ai contenuti</p>
+        <a href="/" class="home-button">Torna alla Home</a>
+    </div>
+</body>
+</html>

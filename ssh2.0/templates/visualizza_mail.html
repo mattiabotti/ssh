@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizza Mail</title>
+    <style>
+        body { 
+            background-color: #f4f4f9; 
+            font-family: Arial, sans-serif; 
+            color: #333; 
+            margin: 0; 
+            padding: 0; 
+        }
+        .container { 
+            width: 80%; 
+            max-width: 600px; 
+            margin: 40px auto; 
+            background-color: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+            padding: 20px; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #4CAF50; 
+        }
+        .mail-box { 
+            background-color: #f9f9f9; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            padding: 15px; 
+            margin-top: 20px; 
+            white-space: pre-wrap; 
+            font-family: Consolas, monospace; 
+        }
+        form { 
+            display: flex; 
+            flex-direction: column; 
+        }
+        /* Pulsanti generici */
+        input[type="submit"] { 
+            margin-top: 20px; 
+            padding: 10px; 
+            border: none; 
+            border-radius: 4px; 
+            background-color: #4CAF50; 
+            color: #fff; 
+            font-size: 1em; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease; 
+        }
+        input[type="submit"]:hover { 
+            background-color: #45a049; 
+        }
+        /* Stile specifico per il pulsante "Indietro": maggiore specificità e uso di !important */
+        input[type="submit"].btn-back { 
+            background-color: #e74c3c !important; 
+        }
+        input[type="submit"].btn-back:hover { 
+            background-color: #c0392b !important; 
+        }
+
+
+        
+      
+        
+        
+        /* Header principale */
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .user-area {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Stile per il menu hamburger */
+        .hamburger {
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 24px;
+        }
+        
+        .hamburger-line {
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 2px;
+        }
+        
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 34px;
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            z-index: 100;
+        }
+        
+        .dropdown.active {
+            display: block;
+        }
+        
+        .dropdown a, .dropdown button {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            text-align: left;
+            width: 100%;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown a:hover, .dropdown button:hover {
+            background-color: #555;
+        }
+        
+        .dropdown .btn-logout {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown .btn-logout:hover {
+            background-color: #c82333;
+        }
+        
+      
+    
+        
+            </style>
+        </head>
+        <body>
+            <header>
+                <div class="user-area">
+                    <div class="hamburger" onclick="toggleDropdown()">
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </div>
+                    
+                    <div class="dropdown" id="dropdown-menu">
+                        <a href="/" title="Torna alla home">Home</a>
+                        <a href="/dashboard" title="go to dashboard">Dashboard</a>
+                        <a href="/convenzioni" title="genera convenzioni">Convenzioni</a>
+                        <a href="/export-associazioni" title="Esporta associazioni">File inail</a>
+                        <button onclick="window.location.href='/logout'" class="btn-logout">Logout</button>
+                    </div>
+                </div>
+                <h1>Sistema di Gestione Mail pcto</h1>
+            </header>
+            
+         <script>
+            function toggleDropdown() {
+                const dropdown = document.getElementById('dropdown-menu');
+                dropdown.classList.toggle('active');
+            }
+            
+            // Chiude il dropdown se si clicca altrove nella pagina
+            window.addEventListener('click', function(e) {
+                const dropdown = document.getElementById('dropdown-menu');
+                const hamburger = document.querySelector('.hamburger');
+                
+                if (!hamburger.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        </script>
+    <div class="container">
+        <h1>Visualizza Mail</h1>
+
+        <!-- Contenitore per il testo della mail -->
+        <div class="mail-box">
+            {{ mail_text }}
+        </div>
+
+        <!-- Form per tornare indietro alla pagina sito_mail.html -->
+        <form action="/sito_mail" method="get">
+            <input type="submit" value="Indietro" class="btn-back">
+        </form>
+
+        <!-- Form per confermare l'invio della mail -->
+        <form action="/send_email" method="post">
+            <input type="hidden" name="mail_text" value="{{ mail_text }}">
+            <input type="submit" value="Conferma invio mail a tutte le aziende">
+        </form>
+
+
+    </div>
+</body>
+</html>

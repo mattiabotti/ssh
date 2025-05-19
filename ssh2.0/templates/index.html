@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione PCTO</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; text-align: center; }
+        header { background: #333; color: white; padding: 1em; display: flex; justify-content: space-between; align-items: center; }
+        nav { display: flex; }
+        nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+        nav a.protected { display: none; }
+        section { padding: 20px; }
+        
+        /* Stili per tabella */
+        table { width: 95%; margin: 20px auto; border-collapse: collapse; background: white; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #555; color: white; }
+        
+        /* Stili per input e pulsanti */
+        input, button, select, textarea { padding: 8px; margin: 5px; width: 90%; max-width: 400px; }
+        button { color: white; border: none; cursor: pointer; }
+        .green-btn { background: #28a745; padding: 10px; width: 200px; margin: 5px; }
+        
+        /* Stili per la barra di ricerca */
+        .search-container {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .search-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-input-group {
+            flex: 1;
+            min-width: 250px;
+            margin: 5px;
+        }
+        #search-nome, #search-comune {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #clear-search {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            width: auto;
+        }
+        .search-options {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .search-options label {
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+        }
+        .search-options input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        /* Stile per la sezione di login */
+        .form-container {
+            display: none;
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Stili per visualizzazione tabellare */
+        .data-container { width: 95%; margin: 0 auto; }
+        .data-section { background: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .disponibile { color: #28a745; font-weight: bold; }
+        .non-disponibile { color: #dc3545; font-weight: bold; }
+        .no-results { text-align: center; padding: 20px; font-style: italic; color: #6c757d; }
+        
+        /* Responsive table */
+        @media screen and (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+        
+        footer { background: #333; color: white; padding: 1em; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestione PCTO</h1>
+        <button id="login-btn" class="green-btn" onclick="toggleLoginSection()">Login</button>
+    </header>
+    
+    <!-- Sezione login -->
+    <section id="login-section" class="form-container">
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()" class="green-btn">Accedi</button>
+    </section>
+    
+    <main>
+     
+
+        <section class="search-container">
+            <h3>Cerca Aziende</h3>
+            <div class="search-box">
+                <div class="search-input-group">
+                    <input type="text" id="search-nome" placeholder="Cerca per nome azienda...">
+                </div>
+                <div class="search-input-group">
+                    <input type="text" id="search-comune" placeholder="Cerca per comune...">
+                </div>
+                <button id="clear-search">Cancella</button>
+            </div>
+            <div class="search-options">
+                <label>
+                    <input type="checkbox" id="filter-disponibili" value="disponibili">
+                    Solo disponibili per lavoro estivo
+                </label>
+
+                
+                   
+               
+            </div>
+        </section>
+
+        <!-- Visualizzazione tabellare -->
+        <section class="data-container">
+            <div class="data-section">
+                <h3>Aziende</h3>
+                <table id="aziendaTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Via</th>
+                            <th>CAP</th>
+                            <th>Comune</th>
+                            <th>Nome referente</th>
+                            <th>Email referente</th>
+                            <th>Cellulare referente</th>
+                            <th>Disponibilità lavoro estivo</th>
+                            <th>Disponibile per stage</th>
+                            <th>Osservazioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="aziendaBody">
+                        <!-- righe caricate dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Sistema di Gestione PCTO</p>
+    </footer>
+
+    <script>
+        // Variabile globale per memorizzare i dati delle aziende
+        let aziende = [];
+
+        // Funzione per mostrare/nascondere la sezione di login
+        function toggleLoginSection() {
+            let loginSection = document.getElementById('login-section');
+            loginSection.style.display = loginSection.style.display === 'none' || loginSection.style.display === '' ? 'block' : 'none';
+        }
+
+        async function login() {
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+            
+            try {
+                // Utilizziamo l'endpoint /auth invece di /login
+                let response = await fetch('/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        'username': username,
+                        'password': password
+                    })
+                });
+                
+                // Verifichiamo se il login è riuscito (redirezione a /dashboard)
+                if (response.redirected && response.url.includes('/dashboard')) {
+                    sessionStorage.setItem('loggedIn', 'true');
+                    window.location.href = '/dashboard'; // Redirect alla dashboard
+                } else {
+                    alert('Credenziali errate');
+                }
+            } catch (error) {
+                console.error('Errore durante il login:', error);
+                alert('Errore durante il login. Riprova più tardi.');
+            }
+        }
+
+        // Funzione per caricare i dati delle aziende
+        async function loadAziende() {
+            try {
+                const response = await fetch('/get-aziende');
+                aziende = await response.json();
+                filterAziende(); // Applica i filtri predefiniti
+            } catch (error) {
+                console.error('Errore nel caricamento delle aziende:', error);
+                document.getElementById('aziendaBody').innerHTML = '<tr><td colspan="10">Errore nel caricamento dei dati</td></tr>';
+            }
+        }
+
+        // Funzione per renderizzare le aziende in formato tabella
+        function renderAziendeTable(aziendeToRender) {
+            const tableBody = document.getElementById('aziendaBody');
+            
+            if (aziendeToRender.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="10" class="no-results">Nessuna azienda trovata</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            aziendeToRender.forEach(azienda => {
+                const disponibilita = azienda.disponibilita_lavoro_estivo ? 
+                    '<span class="disponibile">Sì</span>' : 
+                    '<span class="non-disponibile">No</span>';
+                
+                const disponibilitaStage = azienda.stage ? 
+                    '<span class="disponibile">Sì</span>' : 
+                    '<span class="non-disponibile">No</span>';
+                
+                html += `<tr>
+                    <td>${azienda.nome || ''}</td>
+                    <td>${azienda.via || ''}</td>
+                    <td>${azienda.cap || ''}</td>
+                    <td>${azienda.comune || ''}</td>
+                    <td>${azienda.nome_referente || ''}</td>
+                    <td>${azienda.email_referente || ''}</td>
+                    <td>${azienda.cellulare_referente || ''}</td>
+                    <td>${disponibilita}</td>
+                    <td>${disponibilitaStage}</td>
+                    <td>${azienda.osservazioni || ''}</td>
+                </tr>`;
+            });
+            tableBody.innerHTML = html;
+        }
+
+        // Funzione per filtrare le aziende
+        function filterAziende() {
+            const searchNome = document.getElementById('search-nome').value.toLowerCase();
+            const searchComune = document.getElementById('search-comune').value.toLowerCase();
+            const onlyAvailable = document.getElementById('filter-disponibili').checked;
+            const onlyStage = true;
+            
+            const filteredAziende = aziende.filter(azienda => {
+                // Verifica disponibilità per lavoro estivo se il filtro è attivo
+                if (onlyAvailable && !azienda.disponibilita_lavoro_estivo) {
+                    return false;
+                }
+                
+                // Verifica disponibilità per stage se il filtro è attivo
+                if (onlyStage && !azienda.stage) {
+                    return false;
+                }
+                
+                // Filtro per nome azienda
+                const matchesNome = searchNome === '' || 
+                    (azienda.nome && azienda.nome.toLowerCase().includes(searchNome));
+                
+                // Filtro per comune
+                const matchesComune = searchComune === '' || 
+                    (azienda.comune && azienda.comune.toLowerCase().includes(searchComune));
+                
+                return matchesNome && matchesComune;
+            });
+            
+            renderAziendeTable(filteredAziende);
+        }
+
+        // Controlla se l'utente è già loggato all'avvio della pagina
+        function checkLoginStatus() {
+            if (sessionStorage.getItem('loggedIn')) {
+                document.querySelectorAll('.protected').forEach(link => link.style.display = 'inline');
+                document.getElementById('login-btn').textContent = 'Login';
+            }
+        }
+
+        // Funzione per mostrare la sezione di login se richiesto nell'URL
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('showLogin') === 'true') {
+                document.getElementById('login-section').style.display = 'block';
+            }
+        }
+
+        // Inizializzazione della pagina
+        document.addEventListener('DOMContentLoaded', () => {
+            // Controlla stato login
+            checkLoginStatus();
+            
+            // Controlla parametri URL
+            checkUrlParams();
+            
+            // Carica dati aziende
+            loadAziende();
+            
+            // Aggiungi listener per la ricerca
+            document.getElementById('search-nome').addEventListener('input', filterAziende);
+            document.getElementById('search-comune').addEventListener('input', filterAziende);
+            document.getElementById('filter-disponibili').addEventListener('change', filterAziende);
+            document.getElementById('filter-stage').addEventListener('change', filterAziende);
+            
+            // Aggiungi listener per il pulsante di cancellazione
+            document.getElementById('clear-search').addEventListener('click', () => {
+                document.getElementById('search-nome').value = '';
+                document.getElementById('search-comune').value = '';
+                document.getElementById('filter-disponibili').checked = false;
+                document.getElementById('filter-stage').checked = true; // Manteniamo il filtro stage attivo di default
+                filterAziende();
+            });
+        });
+    </script>
+</body>
+</html>
