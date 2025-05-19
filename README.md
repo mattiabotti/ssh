@@ -1,2 +1,2 @@
 # ssh
-proget for scol
+progetto per la scuola
