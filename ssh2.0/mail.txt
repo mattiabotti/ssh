@@ -1,0 +1,24 @@
+Spett.le  Azienda,
+L'ITIS Enrico Fermi di Modena sta organizzando le attivita' relative ai  Percorsi per le Competenze Trasversali e per l’Orientamento che prevede attivita' di formazione svolta in collaborazione tra scuola e mondo del lavoro, per gli studenti degli ultimi tre anni degli istituti tecnici.
+Per l'anno scolastico [[ANNO_SCOLASTICO]], il nostro Istituto ha programmato un periodo di stage presso aziende, di 2 settimane, per gli studenti delle classi quarte di indirizzo "Informatica e Telecomunicazioni".
+Sono previsti due periodi:
+dal [[INIZIO_PRIMO_PERIODO]] al [[FINE_PRIMO_PERIODO]]
+dal [[INIZIO_SECONDO_PERIODO]] al [[FINE_SECONDO_PERIODO]]
+
+Chiediamo, perciò, se da parte Vostra c'è disponibilita' ad accogliere qualche studente del nostro istituto, eventualmente anche solo in uno dei due periodi indicati.  Lo stage è un'ottima opportunita' per conoscere nuovi ragazzi per eventuali futuri inserimenti in azienda. 
+
+Informazioni possono essere richieste alle prof.sse [[PROF_1]] e [[PROF_2]] scrivendo a questo indirizzo.
+Per rendere efficace la raccolta delle informazioni vi chiediamo cortesemente di esprimere la vostra disponibilità compilando il modulo allegato alla presente mail:
+
+[[LINK_MODULO]]
+
+Grazie della collaborazione
+Distinti saluti
+
+--
+ prof.sse [[PROF_1]] e [[PROF_2]]
+ referenti percorsi PCTO indirizzo Telecomunicazioni
+
+ ITIS FERMI 
+ Via Luosi, 23
+ 41122 Modena

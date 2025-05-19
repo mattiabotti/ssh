@@ -1,0 +1,1 @@
+GOOGLE_APP_KEY = "tmvi gqrz osva wwrc"
