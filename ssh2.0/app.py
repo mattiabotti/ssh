@@ -10,8 +10,8 @@ import datetime  # Importiamo una sola volta il modulo datetime
 from datetime import date  # Importiamo solo date dalla libreria datetime
 
 # Credenziali fisse per l'accesso
-USERNAME = "prof"
-PASSWORD = "Pcto2024-25"
+USERNAME = "a"
+PASSWORD = "aa"
 
 # ... resto del codice ...
 
